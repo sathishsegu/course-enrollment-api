@@ -51,16 +51,16 @@ public class CategoryController {
     /* GET ALL CATEGORIES */
     @Operation(
             summary = "Get Category",
-            description = "Retrieve all categories"
+            description = "Retrieve all categories (Paginated)"
     )
     @GetMapping
     public ResponseEntity<PagedResponse<CategoryListResponseDTO>> getAllCategories(
-            @RequestParam(defaultValue = "0") int pageNumber,
-            @RequestParam(defaultValue = "5") int pageSize,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "categoryName") String sortBy,
-            @RequestParam(defaultValue = "asc") String direction
+            @RequestParam(defaultValue = "asc") String sortDir
     ) {
-        return ResponseEntity.status(HttpStatus.OK).body(categoryService.getAllCategories(pageNumber, pageSize, sortBy, direction));
+        return ResponseEntity.status(HttpStatus.OK).body(categoryService.getAllCategories(page, size, sortBy, sortDir));
     }
 
 
