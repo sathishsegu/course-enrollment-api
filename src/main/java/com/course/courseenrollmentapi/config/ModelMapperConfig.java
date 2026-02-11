@@ -1,8 +1,10 @@
 package com.course.courseenrollmentapi.config;
 
+import com.course.courseenrollmentapi.dto.CourseDetailResponseDTO;
 import com.course.courseenrollmentapi.dto.CourseListResponseDTO;
 import com.course.courseenrollmentapi.dto.CourseResponseDTO;
 import com.course.courseenrollmentapi.entity.Course;
+import com.course.courseenrollmentapi.entity.CourseDetail;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
@@ -33,6 +35,13 @@ public class ModelMapperConfig {
                                 CourseListResponseDTO::setCategoryName
                         )
                 );
+
+        modelMapper.typeMap(CourseDetail.class, CourseDetailResponseDTO.class)
+                .addMapping(src -> src.getCourse().getCourseId(),
+                        CourseDetailResponseDTO::setCourseId)
+                .addMapping(src -> src.getCourse().getCourseTitle(),
+                        CourseDetailResponseDTO::setCourseTitle);
+
 
         return modelMapper;
     }
