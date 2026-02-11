@@ -2,7 +2,7 @@ package com.course.courseenrollmentapi.service.impl;
 
 import com.course.courseenrollmentapi.dto.*;
 import com.course.courseenrollmentapi.entity.Category;
-import com.course.courseenrollmentapi.exception.CategoryNotFoundException;
+import com.course.courseenrollmentapi.exception.ResourceNotFoundException;
 import com.course.courseenrollmentapi.repository.CategoryRepository;
 import com.course.courseenrollmentapi.service.CategoryService;
 import org.modelmapper.ModelMapper;
@@ -36,7 +36,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDetailResponseDTO getCategoryById(Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new CategoryNotFoundException(
+                .orElseThrow(() -> new ResourceNotFoundException(
                     "Category not found with id - " + categoryId));
 
         return modelMapper.map(category, CategoryDetailResponseDTO.class);
@@ -71,7 +71,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryResponseDTO updateCategory(CategoryRequestDTO dto, Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new CategoryNotFoundException(
+                .orElseThrow(() -> new ResourceNotFoundException(
                         "Category not found with id - " + categoryId));
 
         modelMapper.map(dto, category);
@@ -82,7 +82,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void deleteCategory(Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new CategoryNotFoundException(
+                .orElseThrow(() -> new ResourceNotFoundException(
                         "Category not found with id - " + categoryId));
         categoryRepository.delete(category);
     }
@@ -90,7 +90,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryResponseDTO patchCategory(Long categoryId, CategoryPatchRequestDTO dto) {
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new CategoryNotFoundException(
+                .orElseThrow(() -> new ResourceNotFoundException(
                         "Category not found with ID - " + categoryId));
 
         if(dto.getCategoryName() != null) {

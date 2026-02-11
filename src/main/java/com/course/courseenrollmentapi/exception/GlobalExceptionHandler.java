@@ -30,9 +30,9 @@ public class GlobalExceptionHandler {
                 .body(errors);
     }
 
-    @ExceptionHandler(CategoryNotFoundException.class)
+    @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleCategoryNotFoundException(
-                                CategoryNotFoundException ex,
+                                ResourceNotFoundException ex,
                                 HttpServletRequest request ) {
 
         ErrorResponse error = new ErrorResponse();
