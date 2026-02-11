@@ -2,8 +2,10 @@ package com.course.courseenrollmentapi.service.impl;
 
 import com.course.courseenrollmentapi.dto.*;
 import com.course.courseenrollmentapi.entity.Category;
+import com.course.courseenrollmentapi.exception.ResourceConflictException;
 import com.course.courseenrollmentapi.exception.ResourceNotFoundException;
 import com.course.courseenrollmentapi.repository.CategoryRepository;
+import com.course.courseenrollmentapi.repository.CourseRepository;
 import com.course.courseenrollmentapi.service.CategoryService;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -19,10 +21,12 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final ModelMapper modelMapper;
+    private final CourseRepository courseRepository;
 
-    public CategoryServiceImpl(CategoryRepository categoryRepository, ModelMapper modelMapper) {
+    public CategoryServiceImpl(CategoryRepository categoryRepository, ModelMapper modelMapper, CourseRepository courseRepository) {
         this.categoryRepository = categoryRepository;
         this.modelMapper = modelMapper;
+        this.courseRepository = courseRepository;
     }
 
 
@@ -79,13 +83,6 @@ public class CategoryServiceImpl implements CategoryService {
         return modelMapper.map(updatedCategory, CategoryResponseDTO.class);
     }
 
-    @Override
-    public void deleteCategory(Long categoryId) {
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "Category not found with id - " + categoryId));
-        categoryRepository.delete(category);
-    }
 
     @Override
     public CategoryResponseDTO patchCategory(Long categoryId, CategoryPatchRequestDTO dto) {
@@ -105,4 +102,15 @@ public class CategoryServiceImpl implements CategoryService {
         return modelMapper.map(updatedCategory, CategoryResponseDTO.class);
     }
 
+    @Override
+    public void deleteCategory(Long categoryId) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Category not found with id - " + categoryId));
+
+        if(courseRepository.existsByCategory_CategoryId(categoryId)) {
+            throw new ResourceConflictException("Cannot delete category. Courses are associated with this category");
+        }
+        categoryRepository.delete(category);
+    }
 }

@@ -44,4 +44,19 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
+
+    @ExceptionHandler(ResourceConflictException.class)
+    public ResponseEntity<ErrorResponse> handleResourceConflict (
+            ResourceConflictException ex,
+            HttpServletRequest request
+    ) {
+        ErrorResponse error = new ErrorResponse();
+        error.setTimeStamp(LocalDateTime.now());
+        error.setStatus(HttpStatus.CONFLICT.value());
+        error.setError(HttpStatus.CONFLICT.getReasonPhrase());
+        error.setMessage(ex.getMessage());
+        error.setPath(request.getRequestURI());
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
 }
