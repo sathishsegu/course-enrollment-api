@@ -103,6 +103,10 @@ public class CourseController {
     }
 
 
+    @Operation(
+            summary = "Retrieve Students based on Course ID",
+            description = "Retrieves the Students (Paginated)"
+    )
     @GetMapping("/{courseId}/students")
     public ResponseEntity<PagedResponse<StudentResponseDTO>> getStudentsByCourseId(
             @PathVariable Long courseId,
