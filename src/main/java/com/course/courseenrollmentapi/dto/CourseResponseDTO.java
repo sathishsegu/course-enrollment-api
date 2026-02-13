@@ -13,4 +13,6 @@ public class CourseResponseDTO {
     private LocalDateTime createdAt;
     private Long categoryId;
     private String categoryName;
+
+    private CourseDetailResponseDTO courseDetail;
 }

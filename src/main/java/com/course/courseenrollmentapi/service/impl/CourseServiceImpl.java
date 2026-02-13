@@ -47,7 +47,7 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public CourseResponseDTO getCourseById(Long courseId) {
 
-        Course course = courseRepository.findById(courseId)
+        Course course = courseRepository.findWithDetailByCourseId(courseId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Course not found with id - " +courseId));
 
