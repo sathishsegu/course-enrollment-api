@@ -4,6 +4,7 @@ import com.course.courseenrollmentapi.dto.PagedResponse;
 import com.course.courseenrollmentapi.dto.StudentRequestDTO;
 import com.course.courseenrollmentapi.dto.StudentResponseDTO;
 import com.course.courseenrollmentapi.entity.Student;
+import com.course.courseenrollmentapi.exception.ResourceConflictException;
 import com.course.courseenrollmentapi.exception.ResourceNotFoundException;
 import com.course.courseenrollmentapi.repository.StudentRepository;
 import com.course.courseenrollmentapi.service.StudentService;
@@ -29,6 +30,11 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public StudentResponseDTO createStudent(StudentRequestDTO dto) {
+
+        if(studentRepository.existsByEmail(dto.getEmail())) {
+            throw new ResourceConflictException("Email is already in use");
+        }
+
         Student student = modelMapper.map(dto, Student.class);
         Student savedStudent = studentRepository.save(student);
         return modelMapper.map(savedStudent, StudentResponseDTO.class);

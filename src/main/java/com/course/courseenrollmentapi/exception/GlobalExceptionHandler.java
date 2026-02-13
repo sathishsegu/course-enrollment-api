@@ -1,6 +1,7 @@
 package com.course.courseenrollmentapi.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -55,6 +56,22 @@ public class GlobalExceptionHandler {
         error.setStatus(HttpStatus.CONFLICT.value());
         error.setError(HttpStatus.CONFLICT.getReasonPhrase());
         error.setMessage(ex.getMessage());
+        error.setPath(request.getRequestURI());
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorResponse> handleDataIntegrityViolation(
+            DataIntegrityViolationException ex,
+            HttpServletRequest request
+    ) {
+
+        ErrorResponse error = new ErrorResponse();
+        error.setTimeStamp(LocalDateTime.now());
+        error.setStatus(HttpStatus.CONFLICT.value());
+        error.setError(HttpStatus.CONFLICT.getReasonPhrase());
+        error.setMessage("Email is already in use");
         error.setPath(request.getRequestURI());
 
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);

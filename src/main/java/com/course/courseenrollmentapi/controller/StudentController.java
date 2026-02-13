@@ -1,8 +1,10 @@
 package com.course.courseenrollmentapi.controller;
 
+import com.course.courseenrollmentapi.dto.CourseListResponseDTO;
 import com.course.courseenrollmentapi.dto.PagedResponse;
 import com.course.courseenrollmentapi.dto.StudentRequestDTO;
 import com.course.courseenrollmentapi.dto.StudentResponseDTO;
+import com.course.courseenrollmentapi.service.EnrollmentService;
 import com.course.courseenrollmentapi.service.StudentService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -14,9 +16,11 @@ import org.springframework.web.bind.annotation.*;
 public class StudentController {
 
     private final StudentService studentService;
+    private final EnrollmentService enrollmentService;
 
-    public StudentController(StudentService studentService) {
+    public StudentController(StudentService studentService, EnrollmentService enrollmentService) {
         this.studentService = studentService;
+        this.enrollmentService = enrollmentService;
     }
 
     @PostMapping
@@ -48,5 +52,16 @@ public class StudentController {
     public ResponseEntity<Void> deleteStudent(@PathVariable Long studentId) {
         studentService.deleteStudent(studentId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @GetMapping("/{studentId}/courses")
+    public ResponseEntity<PagedResponse<CourseListResponseDTO>> getCoursesByStudentId(
+            @PathVariable Long studentId,
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "5") Integer size,
+            @RequestParam(defaultValue = "courseTitle") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir
+    ) {
+        return ResponseEntity.ok(enrollmentService.getCoursesByStudentId(studentId, page, size, sortBy, sortDir));
     }
 }

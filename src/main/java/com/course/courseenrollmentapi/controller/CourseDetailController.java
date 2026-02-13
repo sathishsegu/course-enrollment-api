@@ -24,7 +24,7 @@ public class CourseDetailController {
         return ResponseEntity.status(HttpStatus.CREATED).body(courseDetailService.createCourseDetail(dto));
     }
 
-    @GetMapping("/course/{detailId}")
+    @GetMapping("/{detailId}")
     public ResponseEntity<CourseDetailResponseDTO> getCourseDetailsByDetailId(@PathVariable Long detailId) {
         return ResponseEntity.ok(courseDetailService.getCourseDetailByDetailId(detailId));
     }

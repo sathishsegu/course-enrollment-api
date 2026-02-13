@@ -22,25 +22,5 @@ public class EnrollmentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(enrollmentService.enrollStudent(dto));
     }
 
-    @GetMapping("/{studentId}/courses")
-    public ResponseEntity<PagedResponse<CourseListResponseDTO>> getCoursesByStudentId(
-            @PathVariable Long studentId,
-            @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(defaultValue = "5") Integer size,
-            @RequestParam(defaultValue = "courseTitle") String sortBy,
-            @RequestParam(defaultValue = "asc") String sortDir
-    ) {
-        return ResponseEntity.ok(enrollmentService.getCoursesByStudentId(studentId, page, size, sortBy, sortDir));
-    }
 
-    @GetMapping("/{courseId}/students")
-    public ResponseEntity<PagedResponse<StudentResponseDTO>> getStudentsByCourseId(
-            @PathVariable Long courseId,
-            @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(defaultValue = "5") Integer size,
-            @RequestParam(defaultValue = "studentName") String sortBy,
-            @RequestParam(defaultValue = "asc") String sortDir
-    ) {
-        return ResponseEntity.ok(enrollmentService.getStudentsByCourseId(courseId, page, size, sortBy, sortDir));
-    }
 }

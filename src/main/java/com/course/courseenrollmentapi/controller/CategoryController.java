@@ -2,6 +2,7 @@ package com.course.courseenrollmentapi.controller;
 
 import com.course.courseenrollmentapi.dto.*;
 import com.course.courseenrollmentapi.service.CategoryService;
+import com.course.courseenrollmentapi.service.CourseService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -18,10 +19,12 @@ import org.springframework.web.bind.annotation.*;
 public class CategoryController {
 
     private final CategoryService categoryService;
+    private final CourseService courseService;
 
     /* Constructor Injection */
-    public CategoryController(CategoryService categoryService) {
+    public CategoryController(CategoryService categoryService, CourseService courseService) {
         this.categoryService = categoryService;
+        this.courseService = courseService;
     }
 
 
@@ -95,5 +98,22 @@ public class CategoryController {
     public ResponseEntity<Void> deleteCategory(@PathVariable Long categoryId) {
         categoryService.deleteCategory(categoryId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+
+    /* RETRIEVE COURSES USING CATEGORY ID */
+    @Operation(
+            summary = "Retrieve Course by category",
+            description = "Retrieves a (Paginated) course list for particular category using categoryId"
+    )
+    @GetMapping("/{categoryId}/courses")
+    public ResponseEntity<PagedResponse<CourseListResponseDTO>> getCoursesByCategoryId(
+            @PathVariable Long categoryId,
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "5") Integer size,
+            @RequestParam(defaultValue = "courseTitle") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(courseService.getCoursesByCategory(categoryId, page, size, sortBy, sortDir));
     }
 }

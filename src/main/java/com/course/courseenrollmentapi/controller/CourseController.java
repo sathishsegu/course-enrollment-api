@@ -2,6 +2,7 @@ package com.course.courseenrollmentapi.controller;
 
 import com.course.courseenrollmentapi.dto.*;
 import com.course.courseenrollmentapi.service.CourseService;
+import com.course.courseenrollmentapi.service.EnrollmentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -19,10 +20,12 @@ import org.springframework.web.bind.annotation.*;
 public class CourseController {
 
     private final CourseService courseService;
+    private final EnrollmentService enrollmentService;
 
     /* Constructor Injection */
-    public CourseController(CourseService courseService) {
+    public CourseController(CourseService courseService, EnrollmentService enrollmentService) {
         this.courseService = courseService;
+        this.enrollmentService = enrollmentService;
     }
 
 
@@ -48,7 +51,7 @@ public class CourseController {
     }
 
 
-    /* GET ALL CATEGORIES */
+    /* GET ALL COURSES */
     @Operation(
             summary = "Retrieve all courses",
             description = "Retrieve all courses (Paginated)"
@@ -64,22 +67,6 @@ public class CourseController {
         return ResponseEntity.ok(courseService.getAllCourses(page, size, sortBy, sortDir));
     }
 
-
-    /* GET COURSE BY CATEGORY */
-    @Operation(
-            summary = "Retrieve Course by category",
-            description = "Retrieves a (Paginated) course list for particular category using categoryId"
-    )
-    @GetMapping("/category/{categoryId}/courses")
-    public ResponseEntity<PagedResponse<CourseListResponseDTO>> getCoursesByCategoryId(
-            @PathVariable Long categoryId,
-            @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(defaultValue = "5") Integer size,
-            @RequestParam(defaultValue = "courseTitle") String sortBy,
-            @RequestParam(defaultValue = "asc") String sortDir
-    ) {
-        return ResponseEntity.status(HttpStatus.OK).body(courseService.getCoursesByCategory(categoryId, page, size, sortBy, sortDir));
-    }
 
 
     /* UPDATE THE WHOLE COURSE */
@@ -113,5 +100,17 @@ public class CourseController {
     public ResponseEntity<Void> deleteCourse(@PathVariable Long courseId) {
         courseService.deleteCourse(courseId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+
+    @GetMapping("/{courseId}/students")
+    public ResponseEntity<PagedResponse<StudentResponseDTO>> getStudentsByCourseId(
+            @PathVariable Long courseId,
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "5") Integer size,
+            @RequestParam(defaultValue = "studentName") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir
+    ) {
+        return ResponseEntity.ok(enrollmentService.getStudentsByCourseId(courseId, page, size, sortBy, sortDir));
     }
 }

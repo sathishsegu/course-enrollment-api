@@ -64,6 +64,9 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     @Override
     public PagedResponse<CourseListResponseDTO> getCoursesByStudentId(Long studentId, Integer page, Integer size, String sortBy, String sortDir) {
 
+        studentRepository.findById(studentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Student not found with ID - " + studentId));
+
         Sort sort = sortDir.equalsIgnoreCase("desc")
                 ? Sort.by("course." + sortBy).descending()
                 : Sort.by("course." + sortBy).ascending();
@@ -88,6 +91,9 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
     @Override
     public PagedResponse<StudentResponseDTO> getStudentsByCourseId(Long courseId, Integer page, Integer size, String sortBy, String sortDir) {
+
+        courseRepository.findById(courseId)
+                .orElseThrow(() -> new ResourceNotFoundException("Course Not found with ID - " + courseId));
 
         Sort sort = sortDir.equalsIgnoreCase("desc")
                 ? Sort.by("student." + sortBy).descending()
