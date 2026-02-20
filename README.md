@@ -27,6 +27,9 @@ The goal of this project is to demonstrate how scalable, relational, and maintai
 - Unique constraints and data integrity enforcement
 - Clean Git workflow with feature branches and meaningful commits
 - Stability-first engineering decisions
+- Dockerized application with MySQL
+- One command startup using Docker Compose
+- Production-style setup
 
 ---
 
@@ -41,6 +44,8 @@ The goal of this project is to demonstrate how scalable, relational, and maintai
 - **ModelMapper**
 - **Bean Validation (Jakarta Validation)**
 - **Swagger / OpenAPI**
+- **Docker**
+- **Docker Compose**
 
 ---
 
@@ -59,6 +64,47 @@ The project follows a clean layered architecture ensuring:
 - Testability  
 - Maintainability  
 - Scalability  
+
+---
+
+##  🐳 Docker Setup
+Run the entire application (API + MySQL) using Docker.
+###
+
+  - Docker Installed
+  - Docker Compose Installed
+
+### ▶️ Run with Docker
+``` bash
+git clone https://github.com/sathishsegu/course-enrollment-api.git
+cd course-enrollment-api
+
+docker compose up --build
+```
+### This will:
+
+- Build the Spring Boot image
+- Start MySQL container
+- Connect API to database automatically
+
+### 🛑 Stop Containers
+```bash
+docker compose down
+```
+---
+## ▶️ How to Run the Project Without Docker (Local Setup)
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/sathishsegu/course-enrollment-api.git
+   ```
+2. Configure MySQL credentials in `application.properties`
+3. Create the database:
+   ```sql
+   CREATE DATABASE course_db;
+   ```
+4. Run the Spring Boot application
+5. Test APIs using Postman or any REST client
 
 ---
 
@@ -187,26 +233,6 @@ This keeps controllers clean and APIs consistent.
 - Enum stored as `STRING` for stability
 - LAZY fetching used to optimize performance
 - Cascade and orphan removal used for dependent entities
-
----
-
-## ▶️ How to Run the Project
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/sathishsegu/course-enrollment-api.git
-   ```
-
-2. Configure MySQL credentials in `application.properties`
-
-3. Create the database:
-   ```sql
-   CREATE DATABASE course_db;
-   ```
-
-4. Run the Spring Boot application
-
-5. Test APIs using Postman or any REST client
 
 ---
 
